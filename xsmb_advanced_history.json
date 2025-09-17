@@ -1,0 +1,28 @@
+{
+  "predictions": [
+    {
+      "source_date": "2025-09-14",
+      "target_date": "2025-09-15",
+      "method": "Giai 7 nóng nhất (Học từ lần soi đúng)",
+      "predicted_lo": "82",
+      "predicted_cap": "82-82",
+      "confidence": 95,
+      "timestamp": "2025-09-17 18:30:00"
+    },
+    {
+      "source_date": "2025-09-15",
+      "target_date": "2025-09-16",
+      "method": "Giai 7 nóng nhất (Học từ lần soi đúng)",
+      "predicted_lo": "12",
+      "predicted_cap": "12-12",
+      "confidence": 95,
+      "timestamp": "2025-09-17 18:30:00"
+    }
+  ],
+  "stats": {
+    "total_predictions": 2,
+    "correct_lo": 1,
+    "correct_cap": 0,
+    "correct_both": 0
+  }
+}
