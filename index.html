@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Nghiên Cứu Cầu Số Xổ Số Miền Bắc</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .main-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            padding: 30px;
+            max-width: 1200px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .prediction-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+        
+        .prediction-card h3 {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .number-item {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin: 5px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
+        }
+        
+        .stats-card h3 {
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(168, 237, 234, 0.3);
+        }
+        
+        .info-card h3 {
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .btn-refresh {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading i {
+            font-size: 2em;
+            color: #667eea;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .confidence-bar {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffa500, #32cd32);
+            transition: width 0.5s ease;
+        }
+        
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .error-message {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .success-message {
+            background: #32cd32;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .input-group {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .form-control {
+            border: 2px solid #667eea;
+            padding: 12px 15px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .date-input-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="main-container">
+            <div class="header">
+                <h1><i class="fas fa-dice"></i> Tool Nghiên Cứu Cầu Số Xổ Số Miền Bắc</h1>
+                <p>Phân tích và dự đoán số xổ số miền Bắc dựa trên dữ liệu thực tế</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 text-center mb-4">
+                    <button class="btn btn-refresh" onclick="loadPredictions()">
+                        <i class="fas fa-sync-alt"></i> Làm Mới Dự Đoán
+                    </button>
+                </div>
+                <div class="col-md-6 text-center mb-4">
+                    <div class="input-group">
+                        <input type="date" id="targetDate" class="form-control" 
+                               value="" max="" style="border-radius: 25px 0 0 25px;">
+                        <button class="btn btn-refresh" onclick="loadPredictionsByDate()" 
+                                style="border-radius: 0 25px 25px 0; border-left: none;">
+                            <i class="fas fa-calendar-alt"></i> Soi Cầu Theo Ngày
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="loading" class="loading" style="display: none;">
+                <i class="fas fa-spinner"></i>
+                <p>Đang phân tích dữ liệu...</p>
+            </div>
+            
+            <div id="error-message" class="error-message" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="error-text"></span>
+            </div>
+            
+            <div id="success-message" class="success-message" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span id="success-text"></span>
+            </div>
+            
+            <div id="predictions-container">
+                <!-- Nội dung dự đoán sẽ được load ở đây -->
+            </div>
+            
+            <div class="timestamp" id="timestamp">
+                <!-- Timestamp sẽ được cập nhật ở đây -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load dự đoán khi trang được tải
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPredictions();
+            
+            // Thiết lập ngày tối đa là hôm nay
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('targetDate').max = today;
+            document.getElementById('targetDate').value = today;
+        });
+        
+        function loadPredictions() {
+            showLoading();
+            hideMessages();
+            
+            fetch('/api/predict')
+                .then(response => response.json())
+                .then(data => {
+                    hideLoading();
+                    
+                    if (data.success) {
+                        displayPredictions(data.predictions);
+                        updateTimestamp(data.timestamp);
+                        showSuccess(`Đã phân tích ${data.data_count} kết quả xổ số`);
+                    } else {
+                        showError(data.error || 'Có lỗi xảy ra khi tải dữ liệu');
+                        if (data.predictions) {
+                            displayPredictions(data.predictions);
+                        }
+                    }
+                })
+                .catch(error => {
+                    hideLoading();
+                    showError('Lỗi kết nối: ' + error.message);
+                });
+        }
+        
+        function loadPredictionsByDate() {
+            const targetDate = document.getElementById('targetDate').value;
+            
+            if (!targetDate) {
+                showError('Vui lòng chọn ngày để soi cầu');
+                return;
+            }
+            
+            showLoading();
+            hideMessages();
+            
+            fetch('/api/predict_by_date', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    date: targetDate
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                
+                if (data.success) {
+                    displayPredictions(data.predictions);
+                    updateTimestamp(data.timestamp);
+                    showSuccess(`Đã soi cầu cho ngày ${data.target_date} - Phân tích ${data.data_count} kết quả`);
+                } else {
+                    showError(data.error || 'Có lỗi xảy ra khi soi cầu theo ngày');
+                    if (data.predictions) {
+                        displayPredictions(data.predictions);
+                    }
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showError('Lỗi kết nối: ' + error.message);
+            });
+        }
+        
+        function displayPredictions(predictions) {
+            const container = document.getElementById('predictions-container');
+            
+            let html = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="prediction-card">
+                            <h3><i class="fas fa-bullseye"></i> Lô Đề Đề Xuất</h3>
+                            <div id="lo-de-list">
+                                ${predictions.lo_de.map(item => `<span class="number-item">${item}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="prediction-card">
+                            <h3><i class="fas fa-link"></i> Cặp Xuyên Đề Xuất</h3>
+                            <div id="cap-xuyen-list">
+                                ${predictions.cap_xuyen.map(item => `<span class="number-item">${item}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stats-card">
+                            <h3><i class="fas fa-chart-line"></i> Thống Kê</h3>
+                            <p><strong>Độ tin cậy:</strong> ${predictions.confidence}%</p>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: ${predictions.confidence}%"></div>
+                            </div>
+                            <p><strong>Số ngày phân tích:</strong> ${predictions.analysis_summary.total_days_analyzed}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h3><i class="fas fa-info-circle"></i> Phân Tích</h3>
+                            <p><strong>Số nóng:</strong> ${predictions.analysis_summary.hot_numbers.join(', ') || 'Không có'}</p>
+                            <p><strong>Số lạnh:</strong> ${predictions.analysis_summary.cold_numbers.join(', ') || 'Không có'}</p>
+                            <p><strong>Cặp nóng:</strong> ${predictions.analysis_summary.hot_pairs.join(', ') || 'Không có'}</p>
+                            <p><strong>Cặp lạnh:</strong> ${predictions.analysis_summary.cold_pairs.join(', ') || 'Không có'}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-card">
+                            <h3><i class="fas fa-lightbulb"></i> Khuyến Nghị</h3>
+                            <ul>
+                                ${predictions.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success-message');
+            const successText = document.getElementById('success-text');
+            successText.textContent = message;
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+        
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+        
+        function updateTimestamp(timestamp) {
+            document.getElementById('timestamp').textContent = `Cập nhật lần cuối: ${timestamp}`;
+        }
+        
+        // Tự động làm mới mỗi 5 phút
+        setInterval(loadPredictions, 300000);
+    </script>
+</body>
+</html>
